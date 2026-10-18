@@ -185,7 +185,7 @@ const requestGeminiText = async (prompt) => {
     ]);
 
 
-    const text =
+    const rawText =
       response?.text?.trim();
 
 
@@ -195,7 +195,7 @@ const requestGeminiText = async (prompt) => {
     |--------------------------------------------------------------------------
     */
 
-    if (!text) {
+    if (!rawText) {
       console.warn(
         '⚠️ Gemini returned an empty response.'
       );
@@ -206,6 +206,10 @@ const requestGeminiText = async (prompt) => {
       };
     }
 
+    const text = rawText
+      .replace(/\*\*\s*\*\*/g, '')
+      .replace(/\*{3,}/g, '')
+      .trim();
 
     console.log(
       '✅ Gemini response received.'
@@ -460,15 +464,19 @@ const buildFallbackSummary = (
     analysis?.healthScore;
 
 
-  let summary =
-    `**${facts.fullName}** is a repository built primarily with **${facts.primaryLanguage}**. `;
+  const langText = facts.primaryLanguage && facts.primaryLanguage !== 'Unknown'
+    ? `built primarily with **${facts.primaryLanguage}**`
+    : 'with multi-language support';
 
-  if (facts.languages !== 'Unknown') {
+  let summary =
+    `**${facts.fullName}** is a repository ${langText}. `;
+
+  if (facts.languages && facts.languages !== 'Unknown') {
     summary +=
       `The detected languages include ${facts.languages}. `;
   }
 
-  if (facts.description) {
+  if (facts.description && facts.description !== 'No repository description available.') {
     summary +=
       `The repository is described as: ${facts.description}`;
   }
@@ -482,7 +490,7 @@ const buildFallbackSummary = (
   }
 
 
-  return summary;
+  return summary.replace(/\*\*\s*\*\*/g, '').trim();
 };
 
 
@@ -711,15 +719,20 @@ Return ONLY valid JSON with exactly these keys:
         ) &&
         parsed?.onboarding
       ) {
+        const cleanStr = (s) =>
+          typeof s === 'string'
+            ? s.replace(/\*\*\s*\*\*/g, '').replace(/\*{3,}/g, '').trim()
+            : s;
+
         return {
           aiSummary:
-            parsed.summary,
+            cleanStr(parsed.summary),
 
           aiRecommendations:
-            parsed.recommendations.slice(
-              0,
-              5
-            ),
+            parsed.recommendations
+              .map(cleanStr)
+              .filter(Boolean)
+              .slice(0, 5),
 
           aiOnboarding: {
             ...buildFallbackOnboarding(
@@ -727,6 +740,10 @@ Return ONLY valid JSON with exactly these keys:
             ),
 
             ...parsed.onboarding,
+
+            overview: cleanStr(parsed.onboarding?.overview),
+            techStack: cleanStr(parsed.onboarding?.techStack),
+            architecture: cleanStr(parsed.onboarding?.architecture),
 
             keyDirectories:
               Array.isArray(

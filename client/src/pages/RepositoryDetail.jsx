@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
-import api from '../services/api';
+import React, { useState, useEffect } from "react";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import api from "../services/api";
 import {
   GitBranch,
   Star,
@@ -20,19 +20,21 @@ import {
   Cpu,
   MessageSquare,
   ShieldCheck,
-  CheckCircle2
-} from 'lucide-react';
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
+  CheckCircle2,
+} from "lucide-react";
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
+import FileTreeVisualizer from "../components/FileTreeVisualizer";
+import FormattedText from "../components/FormattedText";
 
 const LANGUAGE_COLORS = [
-  '#6366f1', // Indigo
-  '#f59e0b', // Amber
-  '#10b981', // Emerald
-  '#ec4899', // Pink
-  '#8b5cf6', // Violet
-  '#06b6d4', // Cyan
-  '#f97316', // Orange
-  '#64748b', // Slate
+  "#6366f1", // Indigo
+  "#f59e0b", // Amber
+  "#10b981", // Emerald
+  "#ec4899", // Pink
+  "#8b5cf6", // Violet
+  "#06b6d4", // Cyan
+  "#f97316", // Orange
+  "#64748b", // Slate
 ];
 
 export default function RepositoryDetail() {
@@ -42,8 +44,8 @@ export default function RepositoryDetail() {
   const [repo, setRepo] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [activeTab, setActiveTab] = useState('overview'); // overview, files, dependencies, readme
-  const [fileSearch, setFileSearch] = useState('');
+  const [activeTab, setActiveTab] = useState("overview"); // overview, files, dependencies, readme
+  const [fileSearch, setFileSearch] = useState("");
 
   const fetchRepo = async () => {
     setLoading(true);
@@ -52,8 +54,8 @@ export default function RepositoryDetail() {
       const res = await api.get(`/repositories/${id}`);
       setRepo(res.data.repository);
     } catch (err) {
-      console.error('Failed to fetch repository:', err);
-      setError(err.customMessage || 'Could not load repository details.');
+      console.error("Failed to fetch repository:", err);
+      setError(err.customMessage || "Could not load repository details.");
     } finally {
       setLoading(false);
     }
@@ -67,7 +69,9 @@ export default function RepositoryDetail() {
     return (
       <div className="min-h-[calc(100vh-4rem)] flex flex-col items-center justify-center gap-3 text-slate-400">
         <RefreshCw className="w-8 h-8 animate-spin text-indigo-500" />
-        <p className="text-sm font-medium">Loading repository intelligence...</p>
+        <p className="text-sm font-medium">
+          Loading repository intelligence...
+        </p>
       </div>
     );
   }
@@ -80,7 +84,9 @@ export default function RepositoryDetail() {
             <AlertCircle className="w-6 h-6 text-rose-400 shrink-0" />
             <h2 className="text-lg font-bold">Failed to Load Repository</h2>
           </div>
-          <p className="text-sm text-rose-300">{error || 'Repository not found.'}</p>
+          <p className="text-sm text-rose-300">
+            {error || "Repository not found."}
+          </p>
           <Link
             to="/dashboard"
             className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold bg-slate-900 text-slate-200 hover:text-white border border-slate-800 transition"
@@ -95,7 +101,7 @@ export default function RepositoryDetail() {
 
   // Filter file tree
   const filteredFiles = (repo.structure?.fileTree || []).filter((f) =>
-    f.path.toLowerCase().includes(fileSearch.toLowerCase())
+    f.path.toLowerCase().includes(fileSearch.toLowerCase()),
   );
 
   return (
@@ -118,12 +124,13 @@ export default function RepositoryDetail() {
             <ShieldCheck className="w-3.5 h-3.5" />
             <span>Health & Static Analysis</span>
           </Link>
-          <Link to={`/repository/${repo.id}/chat`} 
+          <Link
+            to={`/repository/${repo.id}/chat`}
             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-violet-600/10 hover:bg-violet-600/20 text-violet-300 border border-violet-500/30 text-xs font-semibold transition"
           >
-             <MessageSquare className="w-3.5 h-3.5" />
-             <span>RAG Code Chat</span> 
-          </Link> 
+            <MessageSquare className="w-3.5 h-3.5" />
+            <span>RAG Code Chat</span>
+          </Link>
           <a
             href={repo.githubUrl}
             target="_blank"
@@ -153,7 +160,7 @@ export default function RepositoryDetail() {
               </span>
             </div>
             <p className="text-sm text-slate-400 leading-relaxed">
-              {repo.description}
+              <FormattedText text={repo.description} />
             </p>
           </div>
 
@@ -162,12 +169,16 @@ export default function RepositoryDetail() {
             <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-slate-950/80 border border-slate-800 text-xs">
               <Star className="w-3.5 h-3.5 text-amber-400" />
               <span className="text-slate-400">Stars:</span>
-              <strong className="text-slate-200">{repo.stars.toLocaleString()}</strong>
+              <strong className="text-slate-200">
+                {repo.stars.toLocaleString()}
+              </strong>
             </div>
             <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-slate-950/80 border border-slate-800 text-xs">
               <GitFork className="w-3.5 h-3.5 text-indigo-400" />
               <span className="text-slate-400">Forks:</span>
-              <strong className="text-slate-200">{repo.forks.toLocaleString()}</strong>
+              <strong className="text-slate-200">
+                {repo.forks.toLocaleString()}
+              </strong>
             </div>
             <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-slate-950/80 border border-slate-800 text-xs">
               <Clock className="w-3.5 h-3.5 text-emerald-400" />
@@ -182,10 +193,18 @@ export default function RepositoryDetail() {
         {/* Tab Navigation */}
         <div className="flex items-center gap-2 border-t border-slate-800/80 pt-4 overflow-x-auto">
           {[
-            { id: 'overview', label: 'Overview & Languages', icon: Layers },
-            { id: 'files', label: `File Tree (${repo.structure?.totalFiles || 0})`, icon: Folder },
-            { id: 'dependencies', label: `Dependencies (${repo.dependencies?.runtime?.length || 0})`, icon: Package },
-            { id: 'readme', label: 'README', icon: FileText },
+            { id: "overview", label: "Overview & Languages", icon: Layers },
+            {
+              id: "files",
+              label: `File Tree (${repo.structure?.totalFiles || 0})`,
+              icon: Folder,
+            },
+            {
+              id: "dependencies",
+              label: `Dependencies (${repo.dependencies?.runtime?.length || 0})`,
+              icon: Package,
+            },
+            { id: "readme", label: "README", icon: FileText },
           ].map((tab) => {
             const Icon = tab.icon;
             const active = activeTab === tab.id;
@@ -195,8 +214,8 @@ export default function RepositoryDetail() {
                 onClick={() => setActiveTab(tab.id)}
                 className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition ${
                   active
-                    ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/20'
-                    : 'bg-slate-950/60 text-slate-400 hover:text-slate-200 hover:bg-slate-950 border border-slate-800/80'
+                    ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/20"
+                    : "bg-slate-950/60 text-slate-400 hover:text-slate-200 hover:bg-slate-950 border border-slate-800/80"
                 }`}
               >
                 <Icon className="w-3.5 h-3.5" />
@@ -208,7 +227,7 @@ export default function RepositoryDetail() {
       </div>
 
       {/* Tab: Overview & Languages */}
-      {activeTab === 'overview' && (
+      {activeTab === "overview" && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Language Breakdown */}
           <div className="lg:col-span-2 p-6 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-6">
@@ -218,7 +237,10 @@ export default function RepositoryDetail() {
                 <span>Language Composition</span>
               </h3>
               <span className="text-xs text-slate-400">
-                Primary: <strong className="text-indigo-400">{repo.primaryLanguage}</strong>
+                Primary:{" "}
+                <strong className="text-indigo-400">
+                  {repo.primaryLanguage}
+                </strong>
               </span>
             </div>
 
@@ -231,7 +253,8 @@ export default function RepositoryDetail() {
                       key={lang.name}
                       style={{
                         width: `${lang.percentage}%`,
-                        backgroundColor: LANGUAGE_COLORS[idx % LANGUAGE_COLORS.length],
+                        backgroundColor:
+                          LANGUAGE_COLORS[idx % LANGUAGE_COLORS.length],
                       }}
                       title={`${lang.name}: ${lang.percentage}%`}
                     />
@@ -249,7 +272,8 @@ export default function RepositoryDetail() {
                         <span
                           className="w-2.5 h-2.5 rounded-full shrink-0"
                           style={{
-                            backgroundColor: LANGUAGE_COLORS[idx % LANGUAGE_COLORS.length],
+                            backgroundColor:
+                              LANGUAGE_COLORS[idx % LANGUAGE_COLORS.length],
                           }}
                         />
                         <span className="text-xs font-medium text-slate-200 truncate">
@@ -264,7 +288,9 @@ export default function RepositoryDetail() {
                 </div>
               </div>
             ) : (
-              <p className="text-xs text-slate-500">No language data available for this repository.</p>
+              <p className="text-xs text-slate-500">
+                No language data available for this repository.
+              </p>
             )}
           </div>
 
@@ -275,7 +301,8 @@ export default function RepositoryDetail() {
               <span>Key Detected Directories</span>
             </h3>
 
-            {repo.structure?.keyDirectories && repo.structure.keyDirectories.length > 0 ? (
+            {repo.structure?.keyDirectories &&
+            repo.structure.keyDirectories.length > 0 ? (
               <div className="flex flex-wrap gap-2">
                 {repo.structure.keyDirectories.map((dir) => (
                   <span
@@ -288,21 +315,29 @@ export default function RepositoryDetail() {
                 ))}
               </div>
             ) : (
-              <p className="text-xs text-slate-500">No standard architectural directories identified.</p>
+              <p className="text-xs text-slate-500">
+                No standard architectural directories identified.
+              </p>
             )}
 
             <div className="border-t border-slate-800 pt-4 space-y-2">
               <div className="flex items-center justify-between text-xs text-slate-400">
                 <span>Total Files Indexed</span>
-                <strong className="text-slate-200 font-mono">{repo.structure?.totalFiles}</strong>
+                <strong className="text-slate-200 font-mono">
+                  {repo.structure?.totalFiles}
+                </strong>
               </div>
               <div className="flex items-center justify-between text-xs text-slate-400">
                 <span>Total Folders</span>
-                <strong className="text-slate-200 font-mono">{repo.structure?.totalDirs}</strong>
+                <strong className="text-slate-200 font-mono">
+                  {repo.structure?.totalDirs}
+                </strong>
               </div>
               <div className="flex items-center justify-between text-xs text-slate-400">
                 <span>License</span>
-                <strong className="text-slate-200 font-mono">{repo.license}</strong>
+                <strong className="text-slate-200 font-mono">
+                  {repo.license}
+                </strong>
               </div>
             </div>
           </div>
@@ -310,68 +345,32 @@ export default function RepositoryDetail() {
       )}
 
       {/* Tab: File Tree */}
-      {activeTab === 'files' && (
-        <div className="p-6 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <h3 className="text-sm font-bold text-white flex items-center gap-2">
-              <Folder className="w-4 h-4 text-indigo-400" />
-              <span>Repository File Tree ({filteredFiles.length} files)</span>
-            </h3>
-
-            <div className="relative w-full sm:w-64">
-              <Search className="w-3.5 h-3.5 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
-              <input
-                type="text"
-                value={fileSearch}
-                onChange={(e) => setFileSearch(e.target.value)}
-                placeholder="Search file path..."
-                className="w-full pl-9 pr-3 py-1.5 bg-slate-950 border border-slate-800 rounded-lg text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500"
-              />
-            </div>
-          </div>
-
-          <div className="max-h-96 overflow-y-auto rounded-xl bg-slate-950/80 border border-slate-800/80 divide-y divide-slate-800/40">
-            {filteredFiles.length > 0 ? (
-              filteredFiles.map((file) => (
-                <div
-                  key={file.path}
-                  className="px-4 py-2 flex items-center justify-between text-xs hover:bg-slate-900/50 transition"
-                >
-                  <div className="flex items-center gap-2.5 truncate font-mono text-slate-300">
-                    <FileCode className="w-3.5 h-3.5 text-slate-500 shrink-0" />
-                    <span className="truncate">{file.path}</span>
-                  </div>
-                  {file.size > 0 && (
-                    <span className="text-[11px] font-mono text-slate-500 shrink-0 ml-2">
-                      {Math.round(file.size / 1024 * 10) / 10} KB
-                    </span>
-                  )}
-                </div>
-              ))
-            ) : (
-              <div className="py-8 text-center text-xs text-slate-500">
-                No files matched your search.
-              </div>
-            )}
-          </div>
-        </div>
+      {activeTab === "files" && (
+        <FileTreeVisualizer
+          files={repo.structure?.fileTree || []}
+          repoName={repo.name || repo.fullName}
+        />
       )}
 
       {/* Tab: Dependencies */}
-      {activeTab === 'dependencies' && (
+      {activeTab === "dependencies" && (
         <div className="space-y-6">
           <div className="p-6 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-bold text-white flex items-center gap-2">
                 <Package className="w-4 h-4 text-indigo-400" />
-                <span>Runtime Dependencies ({repo.dependencies?.runtime?.length || 0})</span>
+                <span>
+                  Runtime Dependencies (
+                  {repo.dependencies?.runtime?.length || 0})
+                </span>
               </h3>
               <span className="text-xs font-mono px-2 py-0.5 rounded bg-slate-950 text-indigo-400 border border-slate-800">
-                Package Manager: {repo.dependencies?.packageManager || 'npm'}
+                Package Manager: {repo.dependencies?.packageManager || "npm"}
               </span>
             </div>
 
-            {repo.dependencies?.runtime && repo.dependencies.runtime.length > 0 ? (
+            {repo.dependencies?.runtime &&
+            repo.dependencies.runtime.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
                 {repo.dependencies.runtime.map((dep) => (
                   <div
@@ -388,7 +387,9 @@ export default function RepositoryDetail() {
                 ))}
               </div>
             ) : (
-              <p className="text-xs text-slate-500">No runtime dependencies found in package.json.</p>
+              <p className="text-xs text-slate-500">
+                No runtime dependencies found in package.json.
+              </p>
             )}
           </div>
 
@@ -397,7 +398,9 @@ export default function RepositoryDetail() {
             <div className="p-6 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-4">
               <h3 className="text-sm font-bold text-white flex items-center gap-2">
                 <Package className="w-4 h-4 text-violet-400" />
-                <span>Development Dependencies ({repo.dependencies.dev.length})</span>
+                <span>
+                  Development Dependencies ({repo.dependencies.dev.length})
+                </span>
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
                 {repo.dependencies.dev.map((dep) => (
@@ -405,7 +408,9 @@ export default function RepositoryDetail() {
                     key={dep.name}
                     className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 flex items-center justify-between text-xs"
                   >
-                    <span className="font-mono text-slate-300 truncate mr-2">{dep.name}</span>
+                    <span className="font-mono text-slate-300 truncate mr-2">
+                      {dep.name}
+                    </span>
                     <span className="font-mono text-slate-400 shrink-0 text-[11px] bg-slate-900 px-2 py-0.5 rounded border border-slate-800">
                       {dep.version}
                     </span>
@@ -418,7 +423,7 @@ export default function RepositoryDetail() {
       )}
 
       {/* Tab: README */}
-      {activeTab === 'readme' && (
+      {activeTab === "readme" && (
         <div className="p-6 sm:p-8 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-4">
           <div className="flex items-center justify-between border-b border-slate-800 pb-4">
             <h3 className="text-sm font-bold text-white flex items-center gap-2">
@@ -426,7 +431,9 @@ export default function RepositoryDetail() {
               <span>README.md Preview</span>
             </h3>
             <span className="text-xs text-slate-400">
-              {repo.readme?.exists ? 'Verified GitHub Readme' : 'No README in repository'}
+              {repo.readme?.exists
+                ? "Verified GitHub Readme"
+                : "No README in repository"}
             </span>
           </div>
 

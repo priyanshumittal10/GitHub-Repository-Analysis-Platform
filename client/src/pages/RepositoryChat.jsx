@@ -15,8 +15,13 @@ import {
 } from "lucide-react";
 
 function InlineMarkdown({ text }) {
-  const parts = text.split(/(`[^`]+`|\*\*[^*]+\*\*|\*[^*]+\*)/g);
+  if (!text) return null;
+  const sanitized = String(text)
+    .replace(/\*\*\s*\*\*/g, "")
+    .replace(/\*{3,}/g, "");
+  const parts = sanitized.split(/(`[^`]+`|\*\*[^*]+\*\*|\*[^*]+\*)/g);
   return parts.map((part, index) => {
+    if (!part) return null;
     if (part.startsWith("`") && part.endsWith("`")) {
       return (
         <code
@@ -28,16 +33,21 @@ function InlineMarkdown({ text }) {
       );
     }
     if (part.startsWith("**") && part.endsWith("**")) {
+      const inner = part.slice(2, -2).trim();
+      if (!inner) return null;
       return (
         <strong key={index} className="font-semibold text-white">
-          {part.slice(2, -2)}
+          {inner}
         </strong>
       );
     }
     if (part.startsWith("*") && part.endsWith("*")) {
-      return <em key={index}>{part.slice(1, -1)}</em>;
+      const inner = part.slice(1, -1).trim();
+      if (!inner) return null;
+      return <em key={index}>{inner}</em>;
     }
-    return <React.Fragment key={index}>{part}</React.Fragment>;
+    const cleanPlain = part.replace(/\*\*/g, "");
+    return <React.Fragment key={index}>{cleanPlain}</React.Fragment>;
   });
 }
 
@@ -45,6 +55,7 @@ function MarkdownMessage({ content }) {
   const lines = String(content || "")
     .replaceAll("\\*\\*", "**")
     .replaceAll("\\-", "-")
+    .replace(/\*\*\s*\*\*/g, "")
     .split("\n");
   const blocks = [];
   let list = [];

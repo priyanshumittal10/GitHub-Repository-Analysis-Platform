@@ -48,6 +48,11 @@ const normalizeText = (value = '') =>
 const escapeRegex = (value = '') =>
   String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
+const cleanEmptyAsterisks = (text) => {
+  if (typeof text !== 'string') return text;
+  return text.replace(/\*\*\s*\*\*/g, '').replace(/\*{3,}/g, '');
+};
+
 
 /*
 |--------------------------------------------------------------------------
@@ -1477,7 +1482,7 @@ You can also ask me normal general questions.`,
     );
 
     return {
-      answer: aiResult.answer,
+      answer: cleanEmptyAsterisks(aiResult.answer),
       sources,
     };
   }
@@ -1497,12 +1502,14 @@ You can also ask me normal general questions.`,
 
   return {
     answer:
-      buildGroundedFallback({
-        repo,
-        question,
-        intent,
-        chunks: relevantChunks,
-      }),
+      cleanEmptyAsterisks(
+        buildGroundedFallback({
+          repo,
+          question,
+          intent,
+          chunks: relevantChunks,
+        })
+      ),
     sources,
   };
 };

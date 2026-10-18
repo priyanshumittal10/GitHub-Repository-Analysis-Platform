@@ -17,6 +17,7 @@ import {
   Terminal,
   MessageSquare,
 } from "lucide-react";
+import FormattedText from "../components/FormattedText";
 
 export default function RepositoryAnalysis() {
   const { id } = useParams();
@@ -173,9 +174,9 @@ export default function RepositoryAnalysis() {
                 Grounded Interpretation
               </span>
             </div>
-            <p className="text-xs text-slate-300 leading-relaxed whitespace-pre-line">
-              {analysis?.aiSummary || "Analysis summary is generating..."}
-            </p>
+            <div className="text-xs text-slate-300 leading-relaxed whitespace-pre-line">
+              <FormattedText text={analysis?.aiSummary || "Analysis summary is generating..."} />
+            </div>
           </div>
 
           <div className="flex flex-wrap gap-4 pt-3 border-t border-slate-800/80 text-xs text-slate-400">
@@ -340,7 +341,9 @@ export default function RepositoryAnalysis() {
                           {f.file}
                         </span>
                       </div>
-                      <p className="text-slate-400">{f.message}</p>
+                      <div className="text-slate-400">
+                        <FormattedText text={f.message} />
+                      </div>
                     </div>
                     <span className="text-[11px] font-mono text-slate-500 shrink-0">
                       Rule: {f.rule}
@@ -374,7 +377,9 @@ export default function RepositoryAnalysis() {
                     <span className="w-5 h-5 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 flex items-center justify-center shrink-0 font-bold text-[11px]">
                       {i + 1}
                     </span>
-                    <p className="leading-relaxed mt-0.5">{rec}</p>
+                    <div className="leading-relaxed mt-0.5">
+                      <FormattedText text={rec} />
+                    </div>
                   </div>
                 ))
               ) : (
@@ -405,12 +410,12 @@ export default function RepositoryAnalysis() {
                 <h5 className="font-semibold text-indigo-300">
                   Technology Stack & Architecture
                 </h5>
-                <p className="text-slate-300 leading-relaxed">
-                  {analysis?.aiOnboarding?.techStack}
-                </p>
-                <p className="text-slate-400 leading-relaxed">
-                  {analysis?.aiOnboarding?.architecture}
-                </p>
+                <div className="text-slate-300 leading-relaxed">
+                  <FormattedText text={analysis?.aiOnboarding?.techStack} />
+                </div>
+                <div className="text-slate-400 leading-relaxed">
+                  <FormattedText text={analysis?.aiOnboarding?.architecture} />
+                </div>
               </div>
 
               <div className="p-4 rounded-xl bg-slate-950/60 border border-slate-800 space-y-2">
