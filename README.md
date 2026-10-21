@@ -1,4 +1,4 @@
-GitHub Repository Analysis Platform
+GitInsight - GitHub Repository Analysis Platform
 
 [![Vercel Deployment](https://img.shields.io/badge/Deployment-Live%20on%20Vercel-success?style=flat&logo=vercel)](https://git-insight.vercel.app)
 [![API Status](https://img.shields.io/badge/Backend-Render%20Web%20Service-informational?style=flat&logo=render)](https://gitinsight-api-nd5q.onrender.com/api/health)
