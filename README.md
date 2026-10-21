@@ -1,4 +1,4 @@
-# GitInsight — AI-Powered GitHub Repository Intelligence Platform
+GitHub Repository Analysis Platform
 
 [![Vercel Deployment](https://img.shields.io/badge/Deployment-Live%20on%20Vercel-success?style=flat&logo=vercel)](https://git-insight.vercel.app)
 [![API Status](https://img.shields.io/badge/Backend-Render%20Web%20Service-informational?style=flat&logo=render)](https://gitinsight-api-nd5q.onrender.com/api/health)
@@ -174,10 +174,3 @@ To demonstrate GitInsight during presentation or evaluation:
    - *"How is error handling structured?"*
 6. Expand the **Cited Sources** to observe exact file and line references grounding the AI response.
 
----
-
-## 👨‍💻 Author
-
-**Anshul Sharma**  
-Master of Computer Applications
-GitHub: [@anshulsharma48](https://github.com/anshulsharma48)
